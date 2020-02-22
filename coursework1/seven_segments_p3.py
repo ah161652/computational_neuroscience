@@ -2,6 +2,7 @@
 #so submission.README
 
 from math import *
+import numpy as np
 
 #from submission import *
 
@@ -11,14 +12,14 @@ def seven_segment(pattern):
         if a==1:
             return True
         return False
-    
+
 
     def hor(d):
         if d:
             print(" _ ")
         else:
             print("   ")
-    
+
     def vert(d1,d2,d3):
         word=""
 
@@ -26,20 +27,18 @@ def seven_segment(pattern):
             word="|"
         else:
             word=" "
-        
+
         if d3:
             word+="_"
         else:
             word+=" "
-        
+
         if d2:
             word+="|"
         else:
             word+=" "
-        
-        print(word)
 
-    
+        print(word)
 
     pattern_b=list(map(to_bool,pattern))
 
@@ -52,7 +51,25 @@ def seven_segment(pattern):
         if pattern_b[7+i]:
             number+=pow(2,i)
     print(int(number))
-        
+
+
+def create_matrix(pattern0, pattern1, pattern2):
+
+    weight_matrix=np.array([[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]], dtype='f')
+
+
+    for i in range(0,7):
+        for j in range(0,7):
+
+            if i==j:
+                w=float(0)
+                weight_matrix[i][j] = w
+            else:
+                w = float(1/3*((pattern0[i]*pattern0[j])+(pattern1[i]*pattern1[j])+(pattern2[i]*pattern2[j])))
+                weight_matrix[i][j] = w
+
+    print(weight_matrix)
+
 #submission=Submission("your_name")
 #submission.header("Your Name")
 
@@ -63,6 +80,8 @@ one=[-1,-1,1,-1,-1,1,-1,1,-1,-1,-1]
 seven_segment(three)
 seven_segment(six)
 seven_segment(one)
+
+create_matrix(three,six,one)
 
 ##this assumes you have called your weight matrix "weight_matrix"
 #submission.section("Weight matrix")
@@ -76,6 +95,8 @@ test=[1,-1,1,1,-1,1,1,-1,-1,-1,-1]
 
 seven_segment(test)
 #submission.seven_segment(test)
+
+
 ##for COMSM0027
 
 ##where energy is the energy of test
@@ -109,6 +130,3 @@ seven_segment(test)
 
 
 #submission.bottomer()
-
-
-
