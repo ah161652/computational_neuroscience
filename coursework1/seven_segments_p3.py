@@ -4,7 +4,7 @@
 from math import *
 import numpy as np
 
-#from submission import *
+from submission import *
 
 def seven_segment(pattern):
 
@@ -40,6 +40,7 @@ def seven_segment(pattern):
 
         print(word)
 
+
     pattern_b=list(map(to_bool,pattern))
 
     hor(pattern_b[0])
@@ -55,11 +56,11 @@ def seven_segment(pattern):
 
 def create_matrix(pattern0, pattern1, pattern2):
 
-    weight_matrix=np.array([[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]], dtype='f')
+    weight_matrix=np.array([[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0]], dtype='f')
 
 
-    for i in range(0,7):
-        for j in range(0,7):
+    for i in range(0,11):
+        for j in range(0,11):
 
             if i==j:
                 w=float(0)
@@ -69,9 +70,25 @@ def create_matrix(pattern0, pattern1, pattern2):
                 weight_matrix[i][j] = w
 
     print(weight_matrix)
+    return(weight_matrix)
 
-#submission=Submission("your_name")
-#submission.header("Your Name")
+def evolve(pattern, matrix, threshold):
+    # tmp_pattern = [0]*11
+    tmp_pattern = pattern
+    for target_neuron in range(0,11):
+        output = 0
+        for input_neuron in range(0,11):
+            output = output + ((matrix[target_neuron][input_neuron]*pattern[input_neuron]))- threshold
+        if output>threshold:
+            tmp_pattern[target_neuron]=1
+        else:
+            tmp_pattern[target_neuron]=(-1)
+    print(tmp_pattern)
+    return(tmp_pattern)
+
+
+submission=Submission("Aidan Hood")
+submission.header("Aidan Hood")
 
 six=[1,1,-1,1,1,1,1,-1,1,1,-1]
 three=[1,-1,1,1,-1,1,1,1,1,-1,-1]
@@ -81,52 +98,95 @@ seven_segment(three)
 seven_segment(six)
 seven_segment(one)
 
-create_matrix(three,six,one)
+weight_matrix=create_matrix(three,six,one)
 
 ##this assumes you have called your weight matrix "weight_matrix"
-#submission.section("Weight matrix")
-#submission.matrix_print("W",weight_matrix)
+submission.section("Weight matrix")
+submission.matrix_print("W",weight_matrix)
 
 print("test1")
-#submission.section("Test 1")
+submission.section("Test 1")
 
 test=[1,-1,1,1,-1,1,1,-1,-1,-1,-1]
 
+print(test)
 
 seven_segment(test)
-#submission.seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
 
 
-##for COMSM0027
 
-##where energy is the energy of test
-#submission.print_number(energy)
 
 ##this prints a space
-#submission.qquad()
+submission.qquad()
 
-#here the network should run printing at each step
-#for the final submission it should also output to submission on each step
 
 print("test2")
 
 test=[1,1,1,1,1,1,1,-1,-1,-1,-1]
-#submission.section("Test 1")
+submission.section("Test 2")
+
+print(test)
 
 seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
+
+test = evolve(test,weight_matrix,0)
+
+seven_segment(test)
+submission.seven_segment(test)
 
 
-#submission.seven_segment(test)
 
-##for COMSM0027
-##where energy is the energy of test
-#submission.print_number(energy)
 
 ##this prints a space
-#submission.qquad()
-
-#here the network should run printing at each step
-#for the final submission it should also output to submission on each step
+submission.qquad()
 
 
-#submission.bottomer()
+
+submission.bottomer()
