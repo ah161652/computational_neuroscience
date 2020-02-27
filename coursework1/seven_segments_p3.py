@@ -73,8 +73,8 @@ def create_matrix(pattern0, pattern1, pattern2):
     return(weight_matrix)
 
 def evolve(pattern, matrix, threshold):
-    # tmp_pattern = [0]*11
-    tmp_pattern = pattern
+    tmp_pattern = [0]*11
+    # tmp_pattern = pattern
     for target_neuron in range(0,11):
         output = 0
         for input_neuron in range(0,11):
