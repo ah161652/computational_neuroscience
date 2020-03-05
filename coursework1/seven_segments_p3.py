@@ -3,6 +3,7 @@
 
 from math import *
 import numpy as np
+import collections
 
 from submission import *
 
@@ -73,12 +74,11 @@ def create_matrix(pattern0, pattern1, pattern2):
     return(weight_matrix)
 
 def evolve(pattern, matrix, threshold):
-    tmp_pattern = [0]*11
-    # tmp_pattern = pattern
+    tmp_pattern = pattern.copy()
     for target_neuron in range(0,11):
         output = 0
         for input_neuron in range(0,11):
-            output = output + ((matrix[target_neuron][input_neuron]*pattern[input_neuron]))- threshold
+            output = output + ((matrix[target_neuron][input_neuron]*pattern[input_neuron]))
         if output>threshold:
             tmp_pattern[target_neuron]=1
         else:
@@ -110,36 +110,27 @@ submission.section("Test 1")
 test=[1,-1,1,1,-1,1,1,-1,-1,-1,-1]
 
 print(test)
-
 seven_segment(test)
 submission.seven_segment(test)
+x=True
+while x==True:
 
-test = evolve(test,weight_matrix,0)
+    test_tmp = evolve(test,weight_matrix,0)
+    seven_segment(test_tmp)
+    submission.seven_segment(test_tmp)
 
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
+    test = evolve(test_tmp,weight_matrix,0)
+    seven_segment(test)
+    submission.seven_segment(test)
 
 
+    for j in range(len(test)):
+        if test_tmp[j]!=test[j]:
+            x=True
+            break
+        else:
+            x=False
+            continue
 
 
 ##this prints a space
@@ -152,34 +143,28 @@ test=[1,1,1,1,1,1,1,-1,-1,-1,-1]
 submission.section("Test 2")
 
 print(test)
-
 seven_segment(test)
 submission.seven_segment(test)
+x=True
+while x==True:
 
-test = evolve(test,weight_matrix,0)
+    test_tmp = evolve(test,weight_matrix,0)
+    seven_segment(test_tmp)
+    submission.seven_segment(test_tmp)
 
-seven_segment(test)
-submission.seven_segment(test)
+    test = evolve(test_tmp,weight_matrix,0)
+    seven_segment(test)
+    submission.seven_segment(test)
 
-test = evolve(test,weight_matrix,0)
+    for j in range(len(test)):
+        if test_tmp[j]!=test[j]:
+            x=True
+            break
+        else:
+            x=False
+            continue
 
-seven_segment(test)
-submission.seven_segment(test)
 
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
-
-test = evolve(test,weight_matrix,0)
-
-seven_segment(test)
-submission.seven_segment(test)
 
 
 
