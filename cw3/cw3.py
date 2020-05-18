@@ -221,9 +221,9 @@ for i in range(1, len(voltages)):
 
 print(neuron_spike_count)
 #Plot graph
-plt.plot(times,voltages, 'g', label = 'Neuron Membrane Potential')
+plt.plot(times,voltages, 'g', label = 'Neuron Voltage')
 plt.xlabel("Time (s)")
 plt.ylabel("Voltage (V)")
-plt.title("Question 3 Integrate and Fire Neuron Model with Synapses")
+plt.title("Question 1 Integrate and Fire Neuron Voltage with 40 Input Synapses")
 plt.legend(loc=2)
 plt.show()
