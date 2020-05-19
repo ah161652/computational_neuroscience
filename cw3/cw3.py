@@ -152,6 +152,99 @@ import numpy as np
 
 
 
+# #Variables
+# tau_m = 0.01
+# el = -0.065
+# vr = -0.065
+# vt = -0.05
+# rm = 100000000
+# ie = 0.0000000001
+# timestep = 0.00025
+#
+# #synapse variables
+# tau_s = 0.002
+# g = [0.000000004]*40
+# es = 0
+# delta_s = 0.5
+# s = [0]*40
+#
+#
+# #Arrays
+# times = [0]*4000
+# voltages = [0]*4000
+#
+# #Set intial time and voltage
+# times[0] = 0
+# voltages[0]= vr
+#
+# rmis = [0]*40
+# rmgs = [0]*40
+#
+# r = 15
+#
+# neuron_spike_count = 0
+#
+# #Compute all voltages
+# for i in range(1, len(voltages)):
+#
+#     for x in range(0,len(rmgs)):
+#         rmgs[x] = rm *g[x]
+#
+#     # Calculate rmis for each synapse
+#     for x in range(0,len(rmis)):
+#         rmis[x] = rmgs[x]*s[x]*(es-voltages[i-1])
+#
+#
+#     #Use the rmis' and euler's method to calculate next potential
+#     voltages[i] = voltages[i-1] + timestep*(((el-voltages[i-1])+sum(rmis))/tau_m)
+#
+#
+#     #if potential over thesh then set to reset and use euler's method to find next s2 ( +0.5 because it is spiking)
+#     if voltages[i] >= vt:
+#         voltages[i] = vr
+#         neuron_spike_count = neuron_spike_count  + 1
+#
+#
+#     for x in range(0, len(s)):
+#         rnd = random.uniform(0,1)
+#
+#         if rnd < r*timestep:
+#             s[x] = s[x] + (timestep * -s[x] /tau_s) + delta_s
+#         else:
+#             s[x] = s[x] + (timestep * -s[x] /tau_s)
+#
+#
+#
+#     #increment time by timestep
+#     times[i] = times[i-1] + timestep
+#
+#
+# print(neuron_spike_count)
+# #Plot graph
+# plt.plot(times,voltages, 'g', label = 'Neuron Voltage')
+# plt.xlabel("Time (s)")
+# plt.ylabel("Voltage (V)")
+# plt.title("Question 1 Integrate and Fire Neuron Voltage with 40 Input Synapses")
+# plt.legend(loc=2)
+# plt.show()
+
+
+# # ##############################
+# # ##############################
+# # ##########PART B Q2###########
+# # ##############################
+# # ##############################
+
+t_pre = [-1000]*40
+t_post = -1000
+delta_t = [0]*40
+f_delta_t = [0]*40
+A_plus = 0.0000000002
+A_minus = 0.00000000025
+tau_plus = 0.02
+tau_minus = 0.02
+
+
 #Variables
 tau_m = 0.01
 el = -0.065
@@ -170,8 +263,8 @@ s = [0]*40
 
 
 #Arrays
-times = [0]*4000
-voltages = [0]*4000
+times = [0]*1200000
+voltages = [0]*1200000
 
 #Set intial time and voltage
 times[0] = 0
@@ -184,8 +277,16 @@ r = 15
 
 neuron_spike_count = 0
 
+spike_count_averages = [float(0)]*30
+average_index = 0
+
+stdp = True
+
 #Compute all voltages
 for i in range(1, len(voltages)):
+
+    #increment time by timestep
+    times[i] = times[i-1] + timestep
 
     for x in range(0,len(rmgs)):
         rmgs[x] = rm *g[x]
@@ -199,10 +300,23 @@ for i in range(1, len(voltages)):
     voltages[i] = voltages[i-1] + timestep*(((el-voltages[i-1])+sum(rmis))/tau_m)
 
 
-    #if potential over thesh then set to reset and use euler's method to find next s2 ( +0.5 because it is spiking)
+    #if potential over thesh then set to reset
     if voltages[i] >= vt:
         voltages[i] = vr
         neuron_spike_count = neuron_spike_count  + 1
+
+
+
+        if(stdp == True):
+            t_post = times[i]
+            for x in range(0, len(s)):
+                delta_t[x] = t_post - t_pre[x]
+                f_delta_t[x] = A_plus*math.exp((-1)*abs(delta_t[x]/tau_plus))
+                g[x] = g[x] + f_delta_t[x]
+                if (g[x]<0):
+                    g[x] = 0
+                if (g[x]>0.000000004):
+                    g[x] = 0.000000004
 
 
     for x in range(0, len(s)):
@@ -210,20 +324,47 @@ for i in range(1, len(voltages)):
 
         if rnd < r*timestep:
             s[x] = s[x] + (timestep * -s[x] /tau_s) + delta_s
+
+            if(stdp == True):
+                t_pre[x] = times[i]
+                delta_t[x] = t_post - t_pre[x]
+                f_delta_t[x] = (-1)*A_minus*math.exp((-1)*abs(delta_t[x]/tau_minus))
+                g[x] = g[x] + f_delta_t[x]
+                if (g[x]<0):
+                    g[x] = 0
+                if (g[x]>0.000000004):
+                    g[x] = 0.000000004
+
         else:
             s[x] = s[x] + (timestep * -s[x] /tau_s)
 
+    if i%40000 == 0:
+        spike_count_averages[average_index] = float(float(neuron_spike_count)/float(10))
+        average_index = average_index+1
+        neuron_spike_count = 0
 
+average_g = statistics.mean(g)
+#print(average_g)
 
-    #increment time by timestep
-    times[i] = times[i-1] + timestep
+g_nano = [x*pow(10,9) for x in g]
 
+steady_average_firing_rate = (spike_count_averages[-1] + spike_count_averages[-2] + spike_count_averages[-3])/3
+print(steady_average_firing_rate)
 
-print(neuron_spike_count)
 #Plot graph
-plt.plot(times,voltages, 'g', label = 'Neuron Voltage')
-plt.xlabel("Time (s)")
-plt.ylabel("Voltage (V)")
-plt.title("Question 1 Integrate and Fire Neuron Voltage with 40 Input Synapses")
+plt.hist(g_nano, bins = 'auto')
+plt.xlabel("Synaptic Weight (nS)")
+plt.ylabel("Frequency")
+plt.title("Question 2 Synaptic Weights with STDP On")
+plt.legend(loc=2)
+plt.show()
+
+times_10s = range(0,30)
+#print(spike_count_averages)
+#Plot graph
+plt.plot(times_10s,spike_count_averages, 'g', label = 'Postsynaptic Neuron Average Firing Rate')
+plt.xlabel("Time in 10 s intervals")
+plt.ylabel("Firing Rate (Hz)")
+plt.title("Question 2 Integrate and Fire Neuron Firing Rate")
 plt.legend(loc=2)
 plt.show()
